@@ -60,18 +60,6 @@
 		return tokenResponse.data;
 	};
 
-	const isTokenValid = () => {
-		const storedTokenJSON = localStorage.getItem(LOCALSTORAGE_TOKEN_JSON);
-		if (!storedTokenJSON) return false;
-
-		const storedToken = JSON.parse(storedTokenJSON);
-		const issuedTime = storedToken.issued_at || 0;
-		const expiresIn = storedToken.expires_in || 0;
-		const currentTime = Math.floor(Date.now() / 1000);
-
-		return currentTime < issuedTime + expiresIn;
-	};
-
 	onMount(async () => {
 		const launchUrl = new URL(window.location.href);
 		const issParam = launchUrl.searchParams.get('iss') || localStorage.getItem(LOCALSTORAGE_ISS);
@@ -88,32 +76,14 @@
 		const tokenJSON = localStorage.getItem(LOCALSTORAGE_TOKEN_JSON);
 		const issLocalStorage = localStorage.getItem(LOCALSTORAGE_ISS);
 
-		if (tokenJSON) {
-			const storedToken = JSON.parse(tokenJSON);
-			token = storedToken;
-
-			if (!isTokenValid()) {
-				console.log('Token expired, clearing local storage and requesting a new one.');
-				localStorage.removeItem(LOCALSTORAGE_TOKEN_JSON);
-				token = undefined; // Trigger re-authentication
-			} else {
-				console.log('Token is valid, proceeding...');
-				return;
-			}
-		}
-
 		if (token) {
 			// TODO validate token expiry
 			return;
 		}
 
 		if (code) {
-			console.log('Code' + code);
-			const tokenFromCerner = await makeTokenRequest(code);
-
-			token = tokenFromCerner;
-			token = { ...tokenFromCerner, issued_at: Math.floor(Date.now() / 1000) };
-			localStorage.setItem(LOCALSTORAGE_TOKEN_JSON, JSON.stringify(token));
+			token = await makeTokenRequest(code);
+			console.log('token ' + token);
 			return;
 		}
 
@@ -139,5 +109,4 @@
 	Loading...
 {:else if token?.need_patient_banner}
 	<PatientBanner {baseUrl} accessToken={token.access_token} patient={token.patient}></PatientBanner>
-	Main Content
 {/if}

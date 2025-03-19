@@ -2,4 +2,7 @@
 	import PractitionerLaunch from '$lib/PractitionerLaunch.svelte';
 </script>
 
-<PractitionerLaunch></PractitionerLaunch>
+<main>
+	<PractitionerLaunch></PractitionerLaunch>
+	Main content
+</main>

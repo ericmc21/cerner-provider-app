@@ -5,11 +5,11 @@
 
 	export let accessToken: string;
 	export let baseUrl: string;
-	export let patient: string;
+	export let patientId: string;
 	let patientResource: Patient | undefined = undefined;
 
 	onMount(async () => {
-		const patientResourceResponse = await axios.get<Patient>(`${baseUrl}/Patient/${patient}`, {
+		const patientResourceResponse = await axios.get<Patient>(`${baseUrl}/Patient/${patientId}`, {
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import PatientBanner from './PatientBanner.svelte';
+	import ObservationViewer from './ObservationViewer.svelte';
 	import axios from 'axios';
 
 	let launch: string;
@@ -108,5 +109,8 @@
 {#if !token}
 	Loading...
 {:else if token?.need_patient_banner}
-	<PatientBanner {baseUrl} accessToken={token.access_token} patient={token.patient}></PatientBanner>
+	<PatientBanner {baseUrl} accessToken={token.access_token} patientId={token.patient}
+	></PatientBanner>
+	<ObservationViewer {baseUrl} accessToken={token.access_token} patientId={token.patient}
+	></ObservationViewer>
 {/if}

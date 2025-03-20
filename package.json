@@ -30,6 +30,7 @@
 	},
 	"dependencies": {
 		"@types/fhir": "^0.0.41",
-		"axios": "^1.8.3"
+		"axios": "^1.8.3",
+		"date-fns": "^4.1.0"
 	}
 }

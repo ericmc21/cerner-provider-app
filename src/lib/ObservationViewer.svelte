@@ -119,50 +119,56 @@
 	};
 </script>
 
-<div class="max-w-xl rounded-lg border border-blue-100 bg-blue-50 p-6 shadow-sm">
+<div class="mx-auto max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-md">
 	{#await observationResults}
 		<p class="text-sm text-gray-500">Loading observations...</p>
 	{:then observations}
-		<h2 class="mb-2 text-2xl font-semibold text-gray-800">{title}</h2>
+		<h2 class="mb-4 text-2xl font-semibold text-gray-800">{title}</h2>
 
-		<div class="mt-5 space-y-4">
-			<div class="my-4">
-				<p class="font-semi-bold text-gray-700">Create new emperature (degrees Celsius)</p>
+		<div class="space-y-6">
+			<div class="rounded-md border border-gray-200 bg-gray-50 p-4">
+				<p class="mb-2 text-sm font-medium text-gray-700">Record new temperature (°C)</p>
 				<form
 					on:submit|preventDefault={() => {
 						postTemperature(temperature);
 					}}
+					class="flex items-center gap-3"
 				>
-					<div>
-						<input
-							step=".1"
-							min="10"
-							max="50"
-							bind:value={temperature}
-							type="number"
-							class="w-48 border border-black p-1"
-						/>
-						{#if observationPosting}
-							<p class="p-2">Creating observation...</p>
-						{:else}
-							<button type="submit" class="bg-black p-1 text-white">Submit</button>
-						{/if}
-					</div>
+					<input
+						step=".1"
+						min="10"
+						max="50"
+						bind:value={temperature}
+						type="number"
+						placeholder="Enter temp"
+						class="w-36 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+					/>
+					{#if observationPosting}
+						<span class="text-sm text-gray-500">Creating observation...</span>
+					{:else}
+						<button
+							type="submit"
+							class="rounded-md bg-blue-600 px-4 py-2 text-sm text-white transition hover:bg-blue-700"
+						>
+							Submit
+						</button>
+					{/if}
 				</form>
 			</div>
-			{#each getObservationEntries(observations) as observation, i}
-				<div class="border-b border-gray-200 pb-3">
-					<p class="font-medium text-gray-700">{observation.resource?.code?.text}</p>
-					<p class="text-gray-800">
-						{getObservationDisplay(observation.resource)}
-					</p>
-					{#if observation?.resource?.effectiveDateTime}
-						<p class="text-sm text-gray-500">
-							{formatRelative(new Date(observation?.resource?.effectiveDateTime), new Date())}
-						</p>
-					{/if}
-				</div>
-			{/each}
+
+			<div class="space-y-4">
+				{#each getObservationEntries(observations) as observation, i}
+					<div class="rounded-md border border-gray-100 bg-gray-50 p-4 shadow-sm">
+						<p class="text-sm font-semibold text-gray-700">{observation.resource?.code?.text}</p>
+						<p class="text-base text-gray-900">{getObservationDisplay(observation.resource)}</p>
+						{#if observation?.resource?.effectiveDateTime}
+							<p class="mt-1 text-xs text-gray-500">
+								{formatRelative(new Date(observation.resource.effectiveDateTime), new Date())}
+							</p>
+						{/if}
+					</div>
+				{/each}
+			</div>
 		</div>
 	{/await}
 </div>

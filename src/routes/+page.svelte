@@ -4,5 +4,4 @@
 
 <main>
 	<PractitionerLaunch></PractitionerLaunch>
-	Main content
 </main>

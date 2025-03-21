@@ -25,6 +25,8 @@
 	const LOCALSTORAGE_ISS = 'iss';
 	const LOCALSTORAGE_TOKEN_JSON = 'token';
 
+	let observationPosting = false;
+
 	const constructAuthUrl = (authorizationEndpoint: string, launch: string, iss: string) => {
 		const url = new URL(authorizationEndpoint);
 		url.searchParams.set('client_id', clientId);

@@ -9,6 +9,7 @@
 	export let title: string = 'Observations';
 
 	let temperature: number;
+	let observationPosting = false;
 
 	const getObservations = async () => {
 		console.log(`patient: ${patientId}`);
@@ -23,7 +24,10 @@
 		return observationResponse.data;
 	};
 
+	let observationResults = getObservations();
+
 	const postTemperature = async (temperature: number) => {
+		observationPosting = true;
 		const temperatureResource = {
 			resourceType: 'Observation',
 			status: 'final',
@@ -67,6 +71,8 @@
 			{ headers: { Authorization: `Bearer ${accessToken}` } }
 		);
 		console.log(tempObservationResponse);
+		observationPosting = false;
+		observationResults = getObservations();
 	};
 
 	const getObservationDisplay = (observation: Observation | undefined) => {
@@ -114,7 +120,7 @@
 </script>
 
 <div class="max-w-xl rounded-lg border border-blue-100 bg-blue-50 p-6 shadow-sm">
-	{#await getObservations()}
+	{#await observationResults}
 		<p class="text-sm text-gray-500">Loading observations...</p>
 	{:then observations}
 		<h2 class="mb-2 text-2xl font-semibold text-gray-800">{title}</h2>
@@ -136,7 +142,11 @@
 							type="number"
 							class="w-48 border border-black p-1"
 						/>
-						<button type="submit" class="bg-black p-1 text-white">Submit</button>
+						{#if observationPosting}
+							<p class="p-2">Creating observation...</p>
+						{:else}
+							<button type="submit" class="bg-black p-1 text-white">Submit</button>
+						{/if}
 					</div>
 				</form>
 			</div>
